@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LinqSnipers
+namespace LinqSnippets
 {
-    internal class Enterprice //empresa
+    internal class Student
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public Employee[] Employess { get; set; } = new Employee[0];
+        public int Grade { get; set; } = 0;
+        public bool Certified { get; set; }
     }
 }

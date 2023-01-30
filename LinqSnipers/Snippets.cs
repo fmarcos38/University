@@ -254,21 +254,202 @@ namespace LinqSnippets
         }
 
 
-        //TODO -> Hace (en ingles)
+        //paginacion
+        static public IEnumerable<T> GetPage<T>(IEnumerable<T> collection, int numPagina, int totXpag)//la collection es el array total
+        {
+            int startIndex = (numPagina - 1) * totXpag;
+            return collection.Skip(startIndex);//con Skip salto los elemnts q no quiero ya se de 10en10 para c/pagina
 
-        //variables
+        }
+
+        //variables --> este metodo es para declarar variables dentro de las consultas
+        static public void LinqVariables()
+        {
+            int[] numList = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, };
+
+            //obtengo los numeros q esten por encima de la media, elevedos al cuadrado
+            var result = from num in numList
+                         let obtMedia = numList.Average()//obt media
+                         let numCuadrado = Math.Pow(num, 2)//estas variables solo funcionan para result(no fuera)
+                         where numCuadrado > obtMedia
+                         select num;
+
+            Console.WriteLine("Media: {0}", numList.Average());
+
+            foreach(int num in result)
+            {
+                Console.WriteLine("Number: { 0 } Square: {1}", num, Math.Pow(num, 2));
+            }
+
+        }
 
         //funcion ZIP
+        //esta funcion intercala los valores de ambas listas (tienen q terner misma cant de elemnts)
+        static public void ZipLinq()
+        {
+            int[] numbers = { 1, 2, 3, 4, 5 };
+            string[] words = { "one", "two", "three", "four", "five" };
 
-        //Repeat
+            //concateno
+            IEnumerable<string> zipElements = numbers.Zip(words, (num, word) => num + "=" + word);//{"1=one","2=two"}
 
-        //ALL
+        }
+        
+        //Repeat & Range
+        static public void repeat()
+        {
+            //genero una colleccion del 1 al 1000 
+            IEnumerable<int> first1000 = Enumerable.Range(1, 1000);
+
+            //Repeat
+            IEnumerable<string> cincoVecsX = Enumerable.Repeat("X", 3);//{"X","X","X"}
+        }
+        
+
+        //consultas para la clase Student
+        static public void studentLinq()
+        {
+            var classRoom = new[]
+            {
+                new Student
+                {
+                    Id = 1,
+                    Name = "Marcos",
+                    Grade = 90,
+                    Certified = true,
+                },
+                new Student
+                {
+                    Id = 2,
+                    Name = "lore",
+                    Grade = 90,
+                    Certified = true,
+                },
+                new Student
+                {
+                    Id = 3,
+                    Name = "jose",
+                    Grade = 20,
+                    Certified = false,
+                },
+                new Student
+                {
+                    Id = 4,
+                    Name = "pp",
+                    Grade = 75,
+                    Certified = false,
+                }
+            };
+
+            //busco certificados
+            var certificados = from alumno in classRoom
+                               where alumno.Certified== true
+                               select alumno;
+            //no certif
+            var noCertif = from alumno in classRoom
+                           where alumno.Certified== false
+                           select alumno;
+
+            //alum con nota mayor a 50 y esté certif
+            var aprobadoCertifName = from alumno in classRoom
+                                 where alumno.Grade >= 50 && alumno.Certified== true
+                                 select alumno.Name;
+
+        }
+
+        //All -> odos los elemnts deben beden cumplir la condicion ; ANY -->  algunos
+        static public void AllLinq()
+        {
+            var numbers = new List<int>() { 1,2,3,4,5 };
+
+            //saber si todos los num son menores q 10
+            bool result = numbers.All(n => n < 10);
+
+        }
 
         //Aggregate
+        //ejecuta varias operaciones cuya salida de la primera es la entrada de la sigt 
+        static public void aggregateFuncion()
+        {
+            int[] numbers = { 1, 2, 3, 5 };
+
+            //sumo todos los elemnts
+            int suma = numbers.Aggregate((prevSuma, actual) => prevSuma + actual);
+            //1er caso -> 0,1 = 1
+            //2do caso -> 1,2 = 3
+
+        }
 
         //District
+        //para obtener valores distintos
+        static public void distValores()
+        {
+            int[] numbers = { 1, 2, 3, 5, 1, 2, };
+
+            IEnumerable<int> result = numbers.Distinct();
+        }
+
 
         //GroupBy
+        //agrupacion por algún tipo de condicion
+        static public void gropBy() { 
+            List<int> numbers = new List<int> { 1,2,3, 5, 6, 7, 8, 9 };
+
+            //obtengo los pares
+            var grouped = numbers.GroupBy(x => x % 2 == 0);
+
+            //al recorrer la variable 
+            foreach(var valor in grouped)
+            {
+                Console.WriteLine(valor); //salida -> 13579 .. 2468 [primero los q no cumplen]
+            }
+
+
+            //otro ejm 
+            var classRoom = new[]
+            {
+                new Student
+                {
+                    Id = 1,
+                    Name = "Marcos",
+                    Grade = 90,
+                    Certified = true,
+                },
+                new Student
+                {
+                    Id = 2,
+                    Name = "lore",
+                    Grade = 90,
+                    Certified = true,
+                },
+                new Student
+                {
+                    Id = 3,
+                    Name = "jose",
+                    Grade = 20,
+                    Certified = false,
+                },
+                new Student
+                {
+                    Id = 4,
+                    Name = "pp",
+                    Grade = 75,
+                    Certified = false,
+                }
+            };
+
+            var certifQuery = classRoom.GroupBy(student => student.Certified);
+
+            //recorro 1er los grupos Q son 2 --> no certif y SI  certif
+            foreach(var group in certifQuery)
+            {
+                Console.WriteLine("--------{0}-------", group.Key);
+                foreach(var estudent in group)
+                {
+                    Console.WriteLine(estudent.Name);
+                } 
+            }
+        }
 
     }
 }
