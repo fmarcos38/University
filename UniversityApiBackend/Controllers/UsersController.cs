@@ -26,6 +26,7 @@ namespace UniversityApiBackend.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
+
         }
 
         // GET: api/Users/5
@@ -40,6 +41,21 @@ namespace UniversityApiBackend.Controllers
             }
 
             return user;
+        }
+
+        //Creado por mi -> busca user x mail
+        // GET: api/Users/5
+        [HttpGet("{email}")]
+        public async Task<ActionResult<User>> GetUserMail(string email)
+        {
+            var userEmail = await _context.Users.FindAsync(email);
+
+            if (userEmail == null)
+            {
+                return NotFound();
+            }
+
+            return userEmail;
         }
 
         // PUT: api/Users/5
