@@ -42,6 +42,22 @@ namespace UniversityApiBackend.Controllers
             return category;
         }
 
+
+        //creada por MI!!
+        // GET: api/Chapters/name
+        [HttpGet("{name}")]
+        public async Task<ActionResult<Chapter>> GetCourseByCategory(string name)
+        {
+            var courses = await _context.Chapters.FindAsync(name);
+
+            if (courses == null)
+            {
+                return NotFound();
+            }
+
+            return courses;
+        }
+
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

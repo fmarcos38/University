@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniversityApiBackend.DataAccess;
 using UniversityApiBackend.Models;
+using UniversityApiBackend.Services;
 
 namespace UniversityApiBackend.Controllers
 {
@@ -15,10 +16,14 @@ namespace UniversityApiBackend.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly UniversityDBContext _context;
-
-        public CoursesController(UniversityDBContext context)
+        //agrego service creado
+        private readonly ICoursesService _coursesService;
+        public CoursesController(UniversityDBContext context, ICoursesService coursesService)
         {
             _context = context;
+            //inyecto el servicio creado -->lo hago YO
+            _coursesService= coursesService;
+            
         }
 
         // GET: api/Courses
