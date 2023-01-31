@@ -12,6 +12,9 @@ var connectionString = builder.Configuration.GetConnectionString(CONNECTIONNAME)
 //3. Add services to the container. --> LA agrego YO !!
 builder.Services.AddDbContext<UniversityDBContext>(options => options.UseSqlServer(connectionString));
 
+//7. Add service of JWT 
+//builder.Services.AddJwTokenServices(builder.Configuration);
+
 //4. Add Custom Services --> (folder Services) --> los creo YO
 builder.Services.AddScoped<IStudentsService, StudentsService>();
 builder.Services.AddScoped<ICoursesService, CoursesService>();
