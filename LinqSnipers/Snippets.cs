@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 
 
@@ -449,6 +450,71 @@ namespace LinqSnippets
                     Console.WriteLine(estudent.Name);
                 } 
             }
+        }
+
+
+        //ejm con RELACIONES
+        static public void relationLinq()
+        {
+            List<Post> posts = new List<Post>()
+            {
+                new Post{
+                    Id = 1,
+                    Title = "My first post",
+                    Content = "My first content",
+                    Created= DateTime.Now,
+                    Comments= new List<Comment>()
+                    {
+                        new Comment
+                        {
+                            Id = 1,
+                            Title = "My first comment",
+                            Content = "My first content",
+                            Created= DateTime.Now,
+                        },
+                        new Comment
+                        {
+                            Id = 2,
+                            Title = "My second comment",
+                            Content = "My second content",
+                            Created= DateTime.Now,
+                        }
+
+                    }
+                },
+                new Post{
+                    Id = 2,
+                    Title = "My second post",
+                    Content = "My second content",
+                    Created= DateTime.Now,
+                    Comments= new List<Comment>()
+                    {
+                        new Comment
+                        {
+                            Id = 3,
+                            Title = "My  comment",
+                            Content = "My  content",
+                            Created= DateTime.Now,
+                        },
+                        new Comment
+                        {
+                            Id = 4,
+                            Title = "My  comment",
+                            Content = "My  content",
+                            Created= DateTime.Now,
+                        }
+
+                    }
+                }
+            };
+
+            //metodos
+            //mostrar el post y sus comentarios
+            var resp = posts.SelectMany(
+                post => post.Comments,
+                (posts, comment) => new { 
+                    PostId = posts.Id, CommentContent= comment.Content
+                });
         }
 
     }
