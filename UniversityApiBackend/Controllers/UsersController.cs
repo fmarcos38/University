@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniversityApiBackend.DataAccess;
 using UniversityApiBackend.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace UniversityApiBackend.Controllers
 {
@@ -15,10 +18,12 @@ namespace UniversityApiBackend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UniversityDBContext _context;
+        private readonly JwtSettings _jwtSettings;
 
-        public UsersController(UniversityDBContext context)
+        public UsersController(UniversityDBContext context, JwtSettings jwtSettings)
         {
             _context = context;
+            _jwtSettings = jwtSettings;
         }
 
         // GET: api/Users
@@ -43,24 +48,11 @@ namespace UniversityApiBackend.Controllers
             return user;
         }
 
-        //Creado por mi -> busca user x mail
-        // GET: api/Users/5
-        [HttpGet("{email}")]
-        public async Task<ActionResult<User>> GetUserMail(string email)
-        {
-            var userEmail = await _context.Users.FindAsync(email);
-
-            if (userEmail == null)
-            {
-                return NotFound();
-            }
-
-            return userEmail;
-        }
-
+        
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        //con la sgt line -> le doy derechos solo a los Admin
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrador")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
             if (id != user.Id)
@@ -89,9 +81,11 @@ namespace UniversityApiBackend.Controllers
             return NoContent();
         }
 
+
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        //con la sgt line -> le doy derechos solo a los Admin
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrador")]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             _context.Users.Add(user);
@@ -102,6 +96,8 @@ namespace UniversityApiBackend.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        //con la sgt line -> le doy derechos solo a los Admin
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrador")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);

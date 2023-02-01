@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UniversityApiBackend.Controllers
 {
     [ApiController]
-    [Route("[controller]")] //-->apunta a la url principal
+    [Route("[controller]")] // localhost:7190/WeatherForecast
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -18,8 +20,11 @@ namespace UniversityApiBackend.Controllers
             _logger = logger;
         }
 
-        //Metodo GET
+        // Method: GET => Get to  localhost:7190/WeatherForecast
+
         [HttpGet(Name = "GetWeatherForecast")]
+        //con esto le doy seguridad a la ruta --> solo para Admin
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Administrador, User")]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
